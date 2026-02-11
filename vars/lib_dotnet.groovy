@@ -1,5 +1,3 @@
-@Library("lib") _
-
 def dotnetTest(Map props = [:]) {
     def COMMAND = "dotnet test"
     // docker exec labycarweb-dotnet dotnet build file.sln ...
