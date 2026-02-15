@@ -24,3 +24,20 @@ def dockerStart(Map props = [:]){
         return false
     }
 }
+
+/* 
+    pathImage       : /WebAPI/v0.2.0/WebAPI.tar.gz
+
+    es: docker load -i /WebAPI/v0.2.0/WebAPI.tar.gz
+ */
+def dockerLoad(Map props = [:]){
+    try {
+        sh "docker load -i ${props.path}"
+        return true
+    } catch (Exception e) {
+        currentBuild.result = 'UNSTABLE' // Warning, continues
+        error(props.pathImage)
+        return false
+    }
+}
+
