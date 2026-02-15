@@ -32,7 +32,7 @@ def dockerStart(Map props = [:]){
  */
 def dockerLoad(Map props = [:]){
     try {
-        sh "docker load -i ${props.path}"
+        sh "docker load -i ${props.pathImage}"
         return true
     } catch (Exception e) {
         currentBuild.result = 'UNSTABLE' // Warning, continues
