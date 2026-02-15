@@ -35,9 +35,27 @@ def dockerLoad(Map props = [:]){
         sh "docker load -i ${props.pathImage}"
         return true
     } catch (Exception e) {
-        currentBuild.result = 'UNSTABLE' // Warning, continues
+        currentBuild.result = 'ABORTED' // Warning, continues
         error(props.pathImage)
         return false
     }
 }
+
+
+/* 
+    filterName       : web
+    es: docker images --tree -f "reference=web*" 
+ */
+def dockerImageLs(Map props = [:]){
+    try {
+        sh "docker images --tree -f ${props.filterName}"
+        return true
+    } catch (Exception e) {
+        currentBuild.result = 'UNSTABLE' // Warning, continues
+        error(props.filterName)
+        return false
+    }
+}
+
+
 
