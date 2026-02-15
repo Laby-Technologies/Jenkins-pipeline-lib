@@ -49,7 +49,7 @@ def dockerLoad(Map props = [:]){
 def dockerImageLs(Map props = [:]){
     String filter = new String(props.filterName).toLowerCase()
     try {
-        sh "docker images --tree -f reference=${filter}"
+        sh "docker images -f reference=${filter}"
         return true
     } catch (Exception e) {
         currentBuild.result = 'UNSTABLE' // Warning, continues
