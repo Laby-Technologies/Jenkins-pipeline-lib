@@ -47,8 +47,9 @@ def dockerLoad(Map props = [:]){
     es: docker images --tree -f "reference=web*" 
  */
 def dockerImageLs(Map props = [:]){
+    String filter = new String(props.filterName).toLowerCase()
     try {
-        sh "docker images --tree -f ${props.filterName}"
+        sh "docker images --tree -f reference=${filter}"
         return true
     } catch (Exception e) {
         currentBuild.result = 'UNSTABLE' // Warning, continues
