@@ -67,7 +67,7 @@ def dockerImageLs(Map props = [:]){
 */
 def dockerTagLatest(Map props = [:]) {
     try {
-        def imageNameLower = props.imageName.toLowerCase()
+        def imageNameLower = props.imageName.toLowerCase().replaceFirst('.', '-')
         def sanitizedTag = props.currentTag.replaceFirst(/^v/, '')
         sh "docker tag ${imageNameLower}:${sanitizedTag} ${imageNameLower}:latest"
         return true
@@ -80,7 +80,7 @@ def dockerTagLatest(Map props = [:]) {
 
 def dockerComposeUp(){
   try{
-    sh "docker compose up"
+    sh "docker compose up "
     return true
   } catch(Exception e){
       currentBuild.result = 'UNSTABLE' // Warning, continues
