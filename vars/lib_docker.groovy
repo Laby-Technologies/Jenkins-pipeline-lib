@@ -59,4 +59,22 @@ def dockerImageLs(Map props = [:]){
 }
 
 
+/*
+    imageName    : WebAPI
+    currentTag   : v0.2.0
+    latestTag    : latest
+    es: docker tag WebAPI:v0.2.0 WebAPI:latest
+*/
+def dockerTagLatest(Map props = [:]) {
+    try {
+        def imageNameLower = props.imageName.toLowerCase()
+        sh "docker tag ${props.imageName}:${props.currentTag} ${imageNameLower}:latest"
+        return true
+    } catch (Exception e) {
+        currentBuild.result = 'UNSTABLE' // Warning, continues
+        error("Failed to tag ${props.imageName}:${props.currentTag} as latest")
+        return false
+    }
+}
+
 
