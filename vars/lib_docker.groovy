@@ -67,7 +67,7 @@ def dockerImageLs(Map props = [:]){
 */
 def dockerTagLatest(Map props = [:]) {
     try {
-        def imageNameLower = props.imageName.toLowerCase().replaceFirst('.', '-')
+        def imageNameLower = props.imageName.toLowerCase().replace('.', '-')
         def sanitizedTag = props.currentTag.replaceFirst(/^v/, '')
         sh "docker tag ${imageNameLower}:${sanitizedTag} ${imageNameLower}:latest"
         return true
