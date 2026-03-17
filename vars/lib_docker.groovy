@@ -68,11 +68,12 @@ def dockerImageLs(Map props = [:]){
 def dockerTagLatest(Map props = [:]) {
     try {
         def imageNameLower = props.imageName.toLowerCase()
-        sh "docker tag ${imageNameLower}:${props.currentTag} ${imageNameLower}:latest"
+        def sanitizedTag = props.currentTag.replaceFirst(/^v/, '')
+        sh "docker tag ${imageNameLower}:${sanitizedTag} ${imageNameLower}:latest"
         return true
     } catch (Exception e) {
         currentBuild.result = 'UNSTABLE' // Warning, continues
-        error("Failed to tag ${props.imageName}:${props.currentTag} as latest")
+        error("Failed to tag ${props.imageName}:${sanitizedTag} as latest")
         return false
     }
 }
