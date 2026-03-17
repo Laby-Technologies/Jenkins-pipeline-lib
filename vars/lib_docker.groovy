@@ -68,7 +68,7 @@ def dockerImageLs(Map props = [:]){
 def dockerTagLatest(Map props = [:]) {
     try {
         def imageNameLower = props.imageName.toLowerCase()
-        sh "docker tag ${props.imageName}:${props.currentTag} ${imageNameLower}:latest"
+        sh "docker tag ${imageNameLower}:${props.currentTag} ${imageNameLower}:latest"
         return true
     } catch (Exception e) {
         currentBuild.result = 'UNSTABLE' // Warning, continues
