@@ -78,4 +78,14 @@ def dockerTagLatest(Map props = [:]) {
     }
 }
 
+def dockerComposeUp(){
+  try{
+    sh "docker compose up -d"
+    return true
+  } catch(Exception e){
+      currentBuild.result = 'UNSTABLE' // Warning, continues
+      error("Failed to launch docker compose up")
+      return false
+  }
+}
 
