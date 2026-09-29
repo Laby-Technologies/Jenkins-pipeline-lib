@@ -89,3 +89,43 @@ def dockerComposeUp(){
   }
 }
 
+/*
+    Esegue login al registry, tagga l'immagine locale con il tag di versione
+    e con latest, pusha entrambi i tag e infine esegue il logout.
+    Le credenziali sono lette da Jenkins tramite withCredentials.
+
+    credentialsId  : registry-creds                          (obbligatorio, credenziale Jenkins di tipo username/password)
+    registryUrl    : registry.example.com
+    localImage     : webapi:0.2.0
+    remoteVersion  : registry.example.com/team/webapi:0.2.0
+    remoteLatest   : registry.example.com/team/webapi:latest
+
+    es: docker login registry.example.com -u $REGISTRY_USER --password-stdin
+        docker tag webapi:0.2.0 registry.example.com/team/webapi:0.2.0
+        docker tag webapi:0.2.0 registry.example.com/team/webapi:latest
+        docker push registry.example.com/team/webapi:0.2.0
+        docker push registry.example.com/team/webapi:latest
+        docker logout registry.example.com
+*/
+def dockerPushRepository(Map props =[:]){
+    String credsId = props.credentialsId ?: error("credentialsId è obbligatorio")
+    try{
+        withCredentials([usernamePassword(
+            credentialsId: credsId,
+            usernameVariable: 'REGISTRY_USER',
+            passwordVariable: 'REGISTRY_PASS'
+        )]) {
+            sh """
+                echo "\$REGISTRY_PASS" | docker login ${props.registryUrl} -u "\$REGISTRY_USER" --password-stdin
+                docker tag ${props.localImage} ${props.remoteVersion}
+                docker push ${props.remoteVersion}
+                docker logout ${props.registryUrl}
+            """
+        }
+    } catch(Exception e){
+           currentBuild.result = 'UNSTABLE' // Warning, continues
+           error("Failed to publish on private repository")
+           return false
+       }
+}
+
